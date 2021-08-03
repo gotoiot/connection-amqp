@@ -1,0 +1,6 @@
+[submodule "service-amqp-broker"]
+	path = service-amqp-broker
+	url = https://github.com/gotoiot/service-amqp-broker.git
+[submodule "web-mqtt-client"]
+	path = web-mqtt-client
+	url = https://github.com/gotoiot/web-mqtt-client.git

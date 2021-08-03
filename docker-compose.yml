@@ -1,28 +1,34 @@
 version: '3'
 
-# services:
-#   beacons-scanner:
-#     build:
-#       context:    ./service-beacons-scanner
-#       dockerfile: Dockerfile
-#     ports:
-#       - "5000:5000"
-#     env_file:
-#       - ./service-beacons-scanner/env
-#     volumes:
-#       - ./service-beacons-scanner/_service_storage:/app/_service_storage
-#     expose:
-#       - "5000"
-#     ports:
-#       - "5000:5000"
-#     network_mode: host
-#     cap_add:
-#       - NET_ADMIN
-#       - NET_RAW
+services:
+  rabbitmq:
+    image: rabbitmq:3.8.9-management
+    hostname: rabbitmq
+    volumes:
+      # file to configure plugins enabled
+      - ./service-amqp-broker/rabbitmq/enable_plugins:/etc/rabbitmq/enabled_plugins:ro
+      # file to share environment variables
+      - ./service-amqp-broker/rabbitmq/rabbitmq-env.conf:/etc/rabbitmq/rabbitmq-env.conf:ro
+      # file to configure RabbitMQ server
+      - ./service-amqp-broker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      # file to create users, exchanges, queues, bindings at startup
+      - ./service-amqp-broker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+      # dir to store persistent data
+      - ./service-amqp-broker/rabbitmq/data/:/var/lib/rabbitmq/mnesia
+    ports:
+        # HTTP DASHBOARD FOR MANAGEMENT
+        - "15672:15672"
+        # AMQP PROTOCOL
+        - "5672:5672"
+        # MQTT PROTOCOL
+        - "1883:1883"
+        # MQTT OVER WEBSOCKETS
+        - "9001:9001"
+        - "9002:9002"
 
-#   server-web-mqtt-client:
-#     image: httpd:2.4
-#     volumes:
-#       - ./web-mqtt-client:/usr/local/apache2/htdocs/
-#     ports:
-#       - "5001:80"
+  server-web-mqtt-client:
+    image: httpd:2.4
+    volumes:
+      - ./web-mqtt-client:/usr/local/apache2/htdocs/
+    ports:
+      - "5001:80"
