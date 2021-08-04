@@ -25,6 +25,8 @@ services:
         # MQTT OVER WEBSOCKETS
         - "9001:9001"
         - "9002:9002"
+    networks: 
+      - connection-amqp-net
 
   server-web-mqtt-client:
     image: httpd:2.4
@@ -32,3 +34,20 @@ services:
       - ./web-mqtt-client:/usr/local/apache2/htdocs/
     ports:
       - "5001:80"
+
+  amqp-samples:
+    build:
+      context: ./service-amqp-samples
+      dockerfile: Dockerfile
+    env_file:
+      - env
+    networks: 
+      - connection-amqp-net
+    volumes:
+      - ./service-amqp-samples/samples:/app/samples
+    depends_on: 
+      - rabbitmq
+
+networks:
+  connection-amqp-net:
+      driver: bridge
