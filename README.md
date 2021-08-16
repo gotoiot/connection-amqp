@@ -9,7 +9,7 @@ Connection AMQP
 
 Este proyecto es un ecosistema que posee aplicaciones y servicios que trabajan en conjunto para formar una plataforma integral AMQP. 
 
-Está formado por un broker RabbitMQ que es el corazon del sistema, donde es posible conectar diferentes clientes que producen y consumen mensajes haciendo uso de los exchanges, queues, propios del protocolo AMQP. Así mismo, el broker de RabbitMQ posee integraciones a modo de plugins que permiten extender e integrar al ecosistema RabbitMQ distintos protocolos, como MQTT, MQTT por WebSockets, HTTP, STOMP y más. 
+Está formado por un broker RabbitMQ que es el corazon del sistema, donde es posible conectar diferentes clientes que producen y consumen mensajes haciendo uso de los exchanges, queues y bindings, propios del protocolo AMQP. Así mismo, el broker de RabbitMQ posee integraciones a modo de plugins que permiten extender e integrar al ecosistema RabbitMQ distintos protocolos, como MQTT, MQTT por WebSockets, HTTP, STOMP y más. 
 
 Gracias a esas características, en este proyecto se incluye dentro del broker de RabbitMQ un broker MQTT que puede aceptar comunicaciones en texto plano, por SSL/TLS y por WebSockets. Así mismo, el broker RabbitMQ posee un servidor web que permite administrar completamente el broker desde una página web y también, ese mismo servicio, posee una interfaz HTTP para poder realizar todo tipo de comandos y acciones desde cualquier cliente HTTP.
 
