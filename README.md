@@ -9,9 +9,9 @@ Connection AMQP
 
 Este proyecto es un ecosistema que posee aplicaciones y servicios que trabajan en conjunto para formar una plataforma integral AMQP. 
 
-Está formado por un broker RabbitMQ que es el corazon del sistema, donde es posible conectar diferentes clientes que producen y consumen mensajes haciendo uso de los exchanges, queues y bindings, propios del protocolo AMQP. Así mismo, el broker de RabbitMQ posee integraciones a modo de plugins que permiten extender e integrar al ecosistema RabbitMQ distintos protocolos, como MQTT, MQTT por WebSockets, HTTP, STOMP y más. 
+Está formado por un broker RabbitMQ que es el corazon del sistema, donde es posible conectar diferentes clientes que producen y consumen mensajes haciendo uso de los exchanges, queues y bindings, propios del protocolo AMQP. Así mismo, el broker de RabbitMQ posee integraciones a modo de plugins que permiten extender e integrar al ecosistema RabbitMQ distintos protocolos, como MQTT, MQTT por WebSockets, HTTP, STOMP y más. Así mismo, cuenta con plugins que permiten intercomunicar brokers entre sí, pudiendo armar clusters, federaciones y reenvío de entidades particulares. Además cuenta con un administrador web que lo hace muy conveniente para configurarlo. 
 
-Gracias a esas características, en este proyecto se incluye dentro del broker de RabbitMQ un broker MQTT que puede aceptar comunicaciones en texto plano, por SSL/TLS y por WebSockets. Así mismo, el broker RabbitMQ posee un servidor web que permite administrar completamente el broker desde una página web y también, ese mismo servicio, posee una interfaz HTTP para poder realizar todo tipo de comandos y acciones desde cualquier cliente HTTP.
+El broker trae habilitados una serie de plugins que lo hacen muy conveniente para el desarrollo de aplicaciones. Por un lado, con el plugin `rabbitmq_management` se habilita el administrador web del broker y también una interfaz HTTP para realizar las configuraciones mediante su REST API. Con el servicio `rabbitmq_mqtt` y `rabbitmq_web_mqtt` se agrega al broker RabbitMQ un broker MQTT que permite conectar clientes en texto plano, por WebSockets y por SSL. Con los plugin `rabbitmq_federation` y `rabbitmq_federation_management` se habilita dentro del broker la posibilidad de replicar mensajes que se publican en exchanges remotos. Con los plugin `rabbitmq_shovel` y `rabbitmq_shovel_management` es posible tomar datos de un exchange o queue local y replicarlos en un exchange o queue remoto. 
 
 Junto con las características que posee el broker RabbitMQ, en este proyecto se agrega por un lado un servicio en Python que posee ejemplos de muestra para comunicarse con el broker RabbitMQ mediante AMQP y HTTP, así como también un cliente web MQTT que permite comunicarse por WebSockets con el broker MQTT, y que de manera interna es mapeado hacia el broker AMQP. 
 
@@ -19,7 +19,7 @@ Con este ecosistema se tiene una plataforma completa donde es posible integrar t
 
 ![architecture](doc/architecture.png)
 
-> Para que entiendas el alcance de este proyecto, es recomendable que leas la [Introducción a AMQP](https://www.gotoiot.com/pages/articles/amqp_intro/index.html) y la [Introducción a RabbitMQ](https://www.gotoiot.com/pages/articles/rabbitmq_intro/index.html) que se encuentran publicadas en nuestra web.
+> Para que entiendas el alcance de este proyecto, es recomendable que leas los artículos de [Introducción a AMQP](https://www.gotoiot.com/pages/articles/amqp_intro/index.html), [Introducción a RabbitMQ](https://www.gotoiot.com/pages/articles/rabbitmq_intro/index.html) y [RabbitMQ Distribuido](https://www.gotoiot.com/pages/articles/rabbitmq_distribuited/index.html) que se encuentran publicados en nuestra web.
 
 > También sería conveniente que leas una [Introducción a MQTT](https://www.gotoiot.com/pages/articles/mqtt_intro/index.html) que se encuentra publicada en nuestra web.
 
@@ -79,21 +79,19 @@ En esta sección vas a encontrar la información para entender y configurar el p
 
 ### Configuración del broker RabbitMQ
 
-RabbitMQ es un broker que implementa la especificación `AMQP 0-9-1`, y además de soportar el comportamiento estándar, posee extensiones a modo plugins donde se pueden interconectar diferentes protocolos como MQTT, MQTT sobre WebSockets, STOMP, HTTP, y más. Además cuenta con un administrador web que lo hace muy conveniente para configurarlo.
+RabbitMQ es un broker que implementa la especificación `AMQP 0-9-1`, y además de soportar el comportamiento estándar, posee extensiones a modo plugins donde se pueden interconectar diferentes protocolos como MQTT, MQTT sobre WebSockets, STOMP, HTTP, y otros. Así mismo, cuenta con plugins que permiten intercomunicar brokers entre sí, pudiendo armar clusters, federaciones y reenvío de entidades particulares. Además cuenta con un administrador web que lo hace muy conveniente para configurarlo.
 
-Este servicio, además de soportar el protocolo `AMQP 0-9-1` hace uso del plugin `MQTT` y `Web MQTT`, que va a correr un broker MQTT asociado al broker RabbitMQ y te va a permitir conectarte mediante clientes MQTT como microcontroladores, asi como también con clientes web, desde el navegador. Realizando esta integración se tiene un puente entre clientes MQTT con un protocolo altamente escalable, donde podrá intercambiar información con otros servicios y dispositivos.
+Este servicio tiene habilitados una serie de plugins que lo hacen muy conveniente para el desarrollo de aplicaciones. Por un lado, con el plugin `rabbitmq_management` habilita el administrador web del broker y también una interfaz HTTP para realizar las configuraciones mediante su REST API. Con el servicio `rabbitmq_mqtt` y `rabbitmq_web_mqtt` se agrega al broker RabbitMQ un broker MQTT que permite conectar clientes en texto plano, por WebSockets y por SSL. Con los plugin `rabbitmq_federation` y `rabbitmq_federation_management` se habilita dentro del broker la posibilidad de replicar mensajes que se publican en exchanges remotos. Con los plugin `rabbitmq_shovel` y `rabbitmq_shovel_management` es posible tomar datos de un exchange o queue local y replicarlos en un exchange o queue remoto. 
 
-Así mismo, el servicio RabbitMQ se implementa el plugin `rabbitmq_management`, que es un servidor web que te permite acceder desde una página web a la administración de todo el broker. También, al ser un servidor web, tiene una interfaz HTTP que te permite acceder al broker de RabbitMQ mediante cualquier cliente HTTP. De esta manera, podés integrar distintas aplicaciones HTTP con todo el ecosistema, publicar y consumir mensajes.
+Para que tengas una idea clara de la configuración del broker, en esta imagen podés ver las funcionalidades que tiene habilitadas.
 
-Para que tengas una idea más clara sobre la configuración de este servicio, en esta imagen podés ver cómo está armada la arquitectura, y cómo se integra tanto el broker MQTT - y sus respectivos clientes - como el servidor web del administrador - también con sus clientes HTTP - dentro del ecosistema RabbitMQ.
-
-![rabbitmq_layout](doc/rabbitmq_layout_2.png)
+![rabbitmq_plugins](doc/rabbitmq_plugins.png)
 
 Si querés saber más detalles podes ir al [README del proyecto](https://github.com/gotoiot/service-amqp-broker). 
 
 ### Conectar clientes basados en AMQP Samples
 
-El repositorio amqp-samples integrado en este proyecto tiene diferentes códigos de prueba en lenguaje Python para comunicarse con el broker RabbitMQ haciendo uso extensivo de todas las funcionalidades que posee el broker.
+El proyecto `amqp-samples` integrado en este proyecto tiene diferentes códigos de prueba en lenguaje Python para comunicarse con el broker RabbitMQ haciendo uso extensivo de todas las funcionalidades que posee el broker.
 
 Permite producir y consumir mensajes utilizando distintos tipos de exchange - usando el default_exchange, direct_exchanges, fanout_exchanges y topic_exchanges - mediante la biblioteca Pika de Python, como así también crear entidades exchanges, queues y binding, producir y consumir mensajes mediante la interfaz HTTP que provee el plugin `rabbitmq_management`.
 
@@ -135,19 +133,23 @@ En esta sección vas a encontrar información que te va a servir para tener un m
 
 ### AMQP
 
-AMQP es un protocolo de colas que define el comportamiento de un servidor basado en exchanges y queues, que permite vincular a diferentes aplicaciones en múltiples lenguajes de programación, tanto internas como de terceros, mediante un `Mensaje AMQP` que representa la unidad de información a intercambiar.
+AMQP es un protocolo de mensajería que implementa un broker para comunicar aplicaciones/servicios en múltiples lenguajes de programación, tanto propios como de terceros, gracias a la definición de un Mensaje AMQP como lenguaje común para todos.
+
+El protocolo propone la declaración de distintos tipos de exchanges donde los productores envían los mensajes. Así mismo, propone la declaración de queues donde se conectan los consumidores de los mensajes. Finalmente, los binding son reglas que configuran el enrutamiento de los mensajes desde los exchanges hacia las queues. Si querés saber más al respecto podés leer el artículo de [Introducción a AMQP](https://www.gotoiot.com/pages/articles/amqp_intro/index.html) que se encuentra en nuestra web.
 
 ### RabbitMQ
 
-RabbitMQ es un broker que implementa la especificación `AMQP 0-9-1`, y además de soportar el comportamiento estándar, posee extensiones a modo plugins donde se pueden interconectar diferentes protocolos como MQTT, MQTT sobre WebSockets, STOMP, HTTP, y más. Además cuenta con un administrador web que lo hace muy conveniente para configurarlo.
+RabbitMQ es un broker que implementa la especificación 0-9-1 de AMQP, es muy completo y utilizado, y posee extensiones para personalizar diferentes comportamientos del broker que lo hacen especialmente útil para gran variedad de aplicaciones. Si querés saber más al respecto podés leer el artículo de [Introducción a RabbitMQ](https://www.gotoiot.com/pages/articles/rabbitmq_intro/index.html) que se encuentra en nuestra web.
 
-### El broker
+RabbitMQ tiene diferentes mecanismos para distribuir mensajes entre brokers. Por un lado se puede crear un cluster de brokers y repartir la carga entre los brokers. Por otro lado, la federación permite replicar mensajes desde brokers remotos mediante la configuración de upstreams. Finalmente la funcionalidad shovel permite enviar datos desde un origen a un destino de una manera simple y efectiva. Si querés saber más al respecto podés leer el artículo de [RabbitMQ Distribuido](https://www.gotoiot.com/pages/articles/rabbitmq_distribuited/index.html) que se encuentra en nuestra web.
 
-El broker MQTT es un plugin dentro del ecosistema RabbitMQ que permite conectar distintos clientes MQTT en texto plano, con autenticación y mediante WebSockets. En su configuración por defecto, soporta la conexión por Websockets en el puerto 9001, MQTT en el 1883 y el 8883 para comunicación con autenticación. Se ejecuta dentro del ecosistema RabbitMQ sobre un contenedor de Docker para poder correrlo de igual manera en distintas plataformas. Se encuentra en el directorio **service-amqp-broker** y los detalles sobre cómo funciona los podes ver el [README del proyecto](https://github.com/gotoiot/service-amqp-broker).
+### El broker MQTT
+
+El broker MQTT es un plugin dentro del ecosistema RabbitMQ que permite conectar distintos clientes MQTT en texto plano, con autenticación y mediante WebSockets. En su configuración por defecto, soporta la conexión por Websockets en el puerto 9001, MQTT en el 1883 y el 8883 para comunicación con autenticación. Se ejecuta dentro del ecosistema RabbitMQ sobre un contenedor de Docker para poder correrlo de igual manera en distintas plataformas. 
 
 ### El cliente web MQTT
 
-El cliente web es una **single-page-application** que se comunica con el broker através de WebSockets. Desde acá se pueden publicar y suscribirse a topics, y visualizar los mensajes en tiempo real. El cliente web es accedido a través de un servidor que también se ejecuta sobre un contenedor de Docker. Se encuentra en el directorio **web-mqtt-client** y los detalles sobre cómo funciona los podes ver en el [README del proyecto](https://github.com/gotoiot/web-mqtt-client).
+El cliente web es una `single-page-application` que se comunica con el broker MQTT dentro de RabbitMQ através de WebSockets. Desde acá se pueden publicar y suscribirse a topics, y visualizar los mensajes en tiempo real. El cliente web es accedido a través de un servidor que también se ejecuta sobre un contenedor de Docker. Se encuentra en el directorio **web-mqtt-client** y los detalles sobre cómo funciona los podes ver en el [README del proyecto](https://github.com/gotoiot/web-mqtt-client).
 
 ### Ejecución de servicios
 
